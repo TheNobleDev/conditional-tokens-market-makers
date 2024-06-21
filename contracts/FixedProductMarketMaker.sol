@@ -113,8 +113,8 @@ contract FixedProductMarketMaker is ERC20, ERC1155TokenReceiver {
 
     function withdrawFees(address account) public {
         uint rawAmount = feePoolWeight.mul(balanceOf(account)) / totalSupply();
-        uint withdrawableAmount = rawAmount.sub(withdrawnFees[account]);
-        if(withdrawableAmount > 0){
+        if(rawAmount > withdrawnFees[account]){
+            uint withdrawableAmount = rawAmount.sub(withdrawnFees[account]);
             withdrawnFees[account] = rawAmount;
             totalWithdrawnFees = totalWithdrawnFees.add(withdrawableAmount);
             require(collateralToken.transfer(account, withdrawableAmount), "withdrawal transfer failed");
